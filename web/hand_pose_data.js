@@ -25,7 +25,7 @@
   }
 
   const fingerDefs = {
-    thumb: { base: [12.8, -4.0, 1.8], lengths: [8.4, 6.8, 5.6], baseAngle: 31, spread: 0 },
+    thumb: { base: [11.6, -3.8, 1.8], lengths: [6.8, 5.6, 4.6], baseAngle: 42, spread: 0 },
     index: { base: [7.6, 4.2, 0.2], lengths: [13.0, 8.0, 6.0], baseAngle: 92, spread: 9 },
     middle: { base: [2.2, 5.2, 0], lengths: [14.4, 8.8, 6.5], baseAngle: 89, spread: 0 },
     ring: { base: [-3.4, 4.6, 0], lengths: [13.5, 8.2, 6.0], baseAngle: 86, spread: -7 },
@@ -258,7 +258,7 @@
       name: "Thumbs Up",
       sourceCell: 8,
       fingers: {
-        thumb: { curl: [0, 0, 0], spread: 59, depth: -0.2 },
+        thumb: { curl: [0, 0, 0], spread: 48, depth: -0.2 },
         index: { curl: [78, 92, 62], spread: -4, depth: 2.5 },
         middle: { curl: [80, 96, 66], depth: 2.6 },
         ring: { curl: [80, 94, 64], spread: 4, depth: 2.7 },
