@@ -1,6 +1,6 @@
-# Walk / Run Motion Intent
+# Walk / Run / Sprint / Drink Motion Intent
 
-이 문서는 `web/index.html`의 걷기/뛰기 모션 의도를 나중에 다시 파악하기 위한 기록이다. 참고한 정적 페이지는 `D:\github\ue5_codex\CodexPose\web`의 Three.js 기반 Manny 뷰어이며, 현재 구현은 같은 성격의 정적 웹 미리보기로 축소했다.
+이 문서는 `web/index.html`의 걷기/뛰기/전력질주/음료 마시기 모션 의도를 나중에 다시 파악하기 위한 기록이다. 참고한 정적 페이지는 `D:\github\ue5_codex\CodexPose\web`의 Three.js 기반 Manny 뷰어이며, 현재 구현은 같은 성격의 정적 웹 미리보기로 축소했다.
 
 ## 공통 기준
 
@@ -9,7 +9,9 @@
 - 표현 방식: 루트는 중앙에 두고 양발을 러닝머신 방식으로 앞뒤 이동시켜 루프를 읽기 쉽게 표시
 - 색상: 왼쪽은 파랑, 오른쪽은 주황, 중앙 체인은 어두운 회색, 접지 발은 초록
 - 조작: 모션 선택, 재생/일시정지, 정지, 프레임 타임라인, 속도 조절, 전면/측면/상단 시점
-- 직접 열기: `web/index.html?motion=walk`, `web/index.html?motion=run`, `web/index.html?motion=sprint`
+- 직접 열기: `web/index.html?motion=walk`, `web/index.html?motion=run`, `web/index.html?motion=sprint`, `web/index.html?motion=seatedBottleDrink`
+- 특정 프레임 열기: `web/index.html?motion=seatedBottleDrink&frame=46`
+- 데이터 구조: 모션 원본은 `web/codexpose_locomotion_keyposes.js`와 `web/codexpose_seated_bottle_drink_keyposes.js`의 `sourceKeys`이다. 뷰어는 `sourceKeys`에서 생성된 `frames`를 읽어 표시하며, 뷰어 내부에서 새 모션을 절차 생성하지 않는다.
 
 ## 걷기 모션
 
@@ -48,8 +50,20 @@
 - 다리: 착지 발은 몸 아래로 빠르게 당기고, 반대 다리는 높은 무릎 회수 후 긴 전방 리치를 만든다.
 - 무릎 안정성: 발목이 고관절 앞뒤를 지나는 순간에도 무릎 방향을 뒤집지 않고 전방 바이어스를 유지한다. 부호를 급히 바꾸면 역관절처럼 튀는 프레임이 생긴다.
 
+## 앉아서 음료 마시기 모션
+
+- ID: `seatedBottleDrink`
+- 길이: 72프레임
+- 재생 속도: 24fps
+- 원본: `D:\github\ue5_codex\CodexPose\web\manny_seated_bottle_drink_keyposes.js`
+- 의도: 의자에 앉은 캐릭터가 테이블의 병음료를 오른손으로 집어 들고, 입가로 가져가 마신 뒤 다시 테이블에 내려놓는다.
+- Prop: 의자, 테이블, 병을 keypose 데이터의 `props`로 유지한다. 병은 각 프레임의 `props.bottle.bottom/top/center/contact`를 따라 움직인다.
+- 접지: 골반은 의자 높이에 고정하고 양발은 바닥에 둔다. 루프가 아니라 끝에서 멈추는 액션이다.
+
 ## 후속 수정 시 주의점
 
-- 모션 수치를 바꿀 때는 `web/motion_viewer.js`의 `MOTIONS.walk`, `MOTIONS.run`, `MOTIONS.sprint` 값을 먼저 조정한다.
+- 걷기/뛰기/전력질주 모션 수치를 바꿀 때는 `web/codexpose_locomotion_keyposes.js`의 `sourceKeys`를 먼저 조정한다.
+- 음료 마시기 모션 수치를 바꿀 때는 `web/codexpose_seated_bottle_drink_keyposes.js`의 `sourceKeys`를 먼저 조정한다.
+- `web/motion_viewer.js`는 keypose 데이터와 prop을 렌더링하는 뷰어 역할만 맡는다.
 - 새 모션을 추가하면 이 문서에 ID, 프레임 수, fps, 발 접지 의도, 상체/팔/다리 의도를 함께 기록한다.
 - 실제 애니메이션 에셋으로 옮길 때는 발 접지 프레임과 루트 높이 변화부터 고정하고 팔과 상체 보정은 그 다음에 맞춘다.

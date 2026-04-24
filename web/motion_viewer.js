@@ -19,74 +19,16 @@
     return;
   }
 
-  const THREE = window.THREE;
-  const TAU = Math.PI * 2;
-  const MOTIONS = {
-    walk: {
-      name: "Walk Cycle",
-      description: "48프레임, 24fps 안정 보행 루프",
-      frameCount: 48,
-      fps: 24,
-      fast: false,
-      stanceRatio: 0.62,
-      baseY: 94,
-      bob: 1.75,
-      lateralSway: 2.1,
-      stepFront: 21,
-      stepBack: -19,
-      footLift: 10,
-      footSpacing: 9.8,
-      forwardLean: 3.5,
-      chestCounter: 4.8,
-      armReach: 17,
-      kneeForward: 5.5,
-      kneeSwing: 8,
-      kneeLift: 2.5
-    },
-    run: {
-      name: "Run Cycle",
-      description: "32프레임, 32fps 체공 포함 뛰기 루프",
-      frameCount: 32,
-      fps: 32,
-      fast: true,
-      stanceRatio: 0.38,
-      baseY: 95.5,
-      bob: 5.4,
-      lateralSway: 1.25,
-      stepFront: 34,
-      stepBack: -30,
-      footLift: 24,
-      footSpacing: 9.4,
-      forwardLean: 13,
-      chestCounter: 7.5,
-      armReach: 31,
-      kneeForward: 8,
-      kneeSwing: 18,
-      kneeLift: 8
-    },
-    sprint: {
-      name: "Sprint Cycle",
-      description: "32프레임, 36fps 전력질주 루프",
-      frameCount: 32,
-      fps: 36,
-      fast: true,
-      stanceRatio: 0.3,
-      baseY: 96.5,
-      bob: 6.8,
-      lateralSway: 0.9,
-      stepFront: 42,
-      stepBack: -36,
-      footLift: 29,
-      footSpacing: 9.2,
-      forwardLean: 19,
-      chestCounter: 9.2,
-      armReach: 38,
-      kneeForward: 10,
-      kneeSwing: 23,
-      kneeLift: 11
-    }
-  };
+  const KEYPOSE_MOTIONS = window.codexPoseMotionKeyposes || {};
+  const motionOrder = ["walk", "run", "sprint", "seatedBottleDrink"].filter((id) => KEYPOSE_MOTIONS[id]);
+  if (!motionOrder.length) {
+    fallback.style.display = "grid";
+    fallback.querySelector("h2").textContent = "Keypose data did not load.";
+    fallback.querySelector("p").textContent = "codexpose_locomotion_keyposes.js를 먼저 로드해야 합니다.";
+    return;
+  }
 
+  const THREE = window.THREE;
   const palette = {
     left: 0x23aeea,
     right: 0xf4a12d,
@@ -104,8 +46,10 @@
   renderer.outputEncoding = THREE.sRGBEncoding;
 
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 1200);
+  const defaultTargetY = 84;
+  const defaultRadius = 315;
   const target = new THREE.Vector3(0, 84, 0);
-  const orbit = { theta: -0.92, phi: 1.24, radius: 315 };
+  const orbit = { theta: -0.92, phi: 1.24, radius: defaultRadius };
 
   const hemi = new THREE.HemisphereLight(0xffffff, 0xd8e1ea, 1.28);
   scene.add(hemi);
@@ -134,13 +78,7 @@
     right: new THREE.MeshStandardMaterial({ color: palette.right, roughness: 0.62 }),
     center: new THREE.MeshStandardMaterial({ color: palette.center, roughness: 0.58 }),
     joint: new THREE.MeshStandardMaterial({ color: palette.joint, roughness: 0.58 }),
-    contact: new THREE.MeshStandardMaterial({ color: palette.contact, roughness: 0.5 }),
-    footGhost: new THREE.MeshStandardMaterial({
-      color: 0x92a4b6,
-      roughness: 0.72,
-      transparent: true,
-      opacity: 0.55
-    })
+    contact: new THREE.MeshStandardMaterial({ color: palette.contact, roughness: 0.5 })
   };
 
   const joints = {};
@@ -203,159 +141,118 @@
   contactMarkers.right.rotation.x = Math.PI / 2;
   scene.add(contactMarkers.left, contactMarkers.right);
 
+  const propGroup = new THREE.Group();
+  const propMaterials = {
+    chair: new THREE.MeshStandardMaterial({ color: 0x8ca0b3, roughness: 0.72 }),
+    metal: new THREE.MeshStandardMaterial({ color: 0x677482, roughness: 0.48, metalness: 0.12 }),
+    table: new THREE.MeshStandardMaterial({ color: 0xb98958, roughness: 0.66 }),
+    bottle: new THREE.MeshStandardMaterial({ color: 0xf0b45e, roughness: 0.38, transparent: true, opacity: 0.82 }),
+    bottleCap: new THREE.MeshStandardMaterial({ color: 0x2f6fb2, roughness: 0.44 })
+  };
+  let propMotionId = null;
+  let bottleBody = null;
+  let bottleCap = null;
+  propGroup.visible = false;
+  scene.add(propGroup);
+
   let currentMode = "walk";
   let frameIndex = 0;
   let frameCursor = 0;
   let playing = true;
   let speed = 1;
   let lastTime = performance.now();
-  const initialMotion = new URLSearchParams(window.location.search).get("motion");
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialMotion = urlParams.get("motion");
+  const initialFrame = urlParams.get("frame");
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
 
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
+  function vecFromArray(value) {
+    return new THREE.Vector3(value[0], value[1], value[2]);
   }
 
-  function smoothstep(t) {
-    const x = clamp(t, 0, 1);
-    return x * x * (3 - x * 2);
+  function getMotion(modeKey) {
+    return KEYPOSE_MOTIONS[modeKey] || KEYPOSE_MOTIONS[motionOrder[0]];
   }
 
-  function vec(x, y, z) {
-    return new THREE.Vector3(x, y, z);
+  function getFrame(modeKey, index) {
+    const motion = getMotion(modeKey);
+    const frames = Array.isArray(motion.frames) ? motion.frames : [];
+    const maxFrame = Math.max(0, frames.length - 1);
+    return frames[clamp(Math.round(index), 0, maxFrame)] || motion.keyposes?.[0];
   }
 
-  function motionPhase(frame, frameCount) {
-    return ((frame % frameCount) + frameCount) / frameCount;
-  }
-
-  function sampleFoot(phase, side, cfg) {
-    const p = ((phase % 1) + 1) % 1;
-    const sideX = side * cfg.footSpacing;
-    const planted = p < cfg.stanceRatio;
-    let t;
-    let z;
-    let lift;
-
-    if (planted) {
-      t = smoothstep(p / cfg.stanceRatio);
-      z = lerp(cfg.stepFront, cfg.stepBack, t);
-      lift = 0;
-    } else {
-      t = smoothstep((p - cfg.stanceRatio) / (1 - cfg.stanceRatio));
-      z = lerp(cfg.stepBack, cfg.stepFront, t);
-      lift = Math.sin(t * Math.PI);
-    }
-
-    const ankleY = planted ? 8.0 + Math.sin(t * Math.PI) * 0.45 : 8.0 + lift * cfg.footLift;
-    const toeY = planted ? 1.2 : 1.5 + lift * Math.max(3, cfg.footLift * 0.28);
-    const toeReach = planted ? lerp(15.8, 13.8, t) : 15.2 + lift * 2.2;
-    const sideSweep = planted ? 0 : side * lift * (cfg.fast ? 2.4 : 1.1);
-
+  function buildPoseFromFrame(frame) {
+    const points = {};
+    jointNames.forEach((name) => {
+      points[name] = vecFromArray(frame.points[name]);
+    });
     return {
-      ankle: vec(sideX + sideSweep, ankleY, z),
-      toe: vec(sideX + side * 0.9 + sideSweep * 0.6, toeY, z + toeReach),
-      planted,
-      lift,
-      phase: p
-    };
-  }
-
-  function solveLeg(side, hip, foot, cfg) {
-    const ankle = foot.ankle;
-    const toe = foot.toe;
-    const mid = hip.clone().lerp(ankle, 0.53);
-    const knee = mid.clone();
-    const kneeForward = cfg.kneeForward + foot.lift * cfg.kneeSwing;
-    knee.x += side * (1.4 + foot.lift * 2.4);
-    knee.y += foot.lift * cfg.kneeLift - (foot.planted ? 1.4 : 0);
-    knee.z += kneeForward;
-    return { hip, knee, ankle, toe };
-  }
-
-  function buildArm(side, shoulder, drive, cfg) {
-    const forward = drive;
-    const pump = Math.abs(forward);
-    const isRun = cfg.fast;
-    const elbowDrop = isRun ? 14.5 : 21.0;
-    const handDrop = isRun ? 12.8 : 17.5;
-    const elbowReach = cfg.armReach * (isRun ? 0.46 : 0.52);
-    const handReach = cfg.armReach * (isRun ? 0.58 : 0.62);
-    const elbow = shoulder.clone().add(vec(
-      side * (4.8 + pump * 1.3),
-      -elbowDrop + Math.max(0, forward) * 3.2,
-      forward * elbowReach
-    ));
-    const hand = elbow.clone().add(vec(
-      side * (2.8 + pump * 1.1),
-      -handDrop + Math.max(0, forward) * (isRun ? 7.5 : 3.6),
-      forward * handReach
-    ));
-    return { shoulder, elbow, hand };
-  }
-
-  function buildPose(modeKey, frame) {
-    const cfg = MOTIONS[modeKey];
-    const phase = motionPhase(frame, cfg.frameCount);
-    const wave = Math.sin(phase * TAU);
-    const doubleWave = Math.sin(phase * TAU * 2);
-    const contactCompression = Math.max(0, Math.cos(phase * TAU * 2));
-    const runFlight = cfg.fast ? Math.max(0, Math.sin(phase * TAU * 2 - 0.18)) : 0;
-    const rootX = wave * cfg.lateralSway;
-    const rootY = cfg.baseY
-      + (1 - Math.cos(phase * TAU * 2)) * 0.5 * cfg.bob
-      + runFlight * 1.7
-      - contactCompression * (cfg.fast ? 2.0 : 0.45);
-    const twist = Math.sin(phase * TAU + Math.PI * 0.12);
-    const pelvis = vec(rootX, rootY, 0);
-    const spine = pelvis.clone().add(vec(0, 19, cfg.forwardLean * 0.36));
-    const chest = spine.clone().add(vec(0, 25, cfg.forwardLean));
-    const neck = chest.clone().add(vec(0, 15, cfg.forwardLean * 0.22));
-    const head = neck.clone().add(vec(0, 12, cfg.forwardLean * 0.12));
-    const shoulderTwist = twist * cfg.chestCounter;
-    const shoulderL = chest.clone().add(vec(22, 1.5, -shoulderTwist));
-    const shoulderR = chest.clone().add(vec(-22, 1.5, shoulderTwist));
-    const hipL = pelvis.clone().add(vec(10.5, -2.5 - doubleWave * 0.9, -twist * 2.4));
-    const hipR = pelvis.clone().add(vec(-10.5, -2.5 + doubleWave * 0.9, twist * 2.4));
-    const leftFoot = sampleFoot(phase + 0.5, 1, cfg);
-    const rightFoot = sampleFoot(phase, -1, cfg);
-    const leftLeg = solveLeg(1, hipL, leftFoot, cfg);
-    const rightLeg = solveLeg(-1, hipR, rightFoot, cfg);
-    const leftArmDrive = -Math.cos(phase * TAU);
-    const rightArmDrive = Math.cos(phase * TAU);
-    const leftArm = buildArm(1, shoulderL, leftArmDrive, cfg);
-    const rightArm = buildArm(-1, shoulderR, rightArmDrive, cfg);
-
-    return {
-      points: {
-        pelvis,
-        spine,
-        chest,
-        neck,
-        head,
-        shoulder_l: leftArm.shoulder,
-        elbow_l: leftArm.elbow,
-        hand_l: leftArm.hand,
-        shoulder_r: rightArm.shoulder,
-        elbow_r: rightArm.elbow,
-        hand_r: rightArm.hand,
-        hip_l: leftLeg.hip,
-        knee_l: leftLeg.knee,
-        ankle_l: leftLeg.ankle,
-        toe_l: leftLeg.toe,
-        hip_r: rightLeg.hip,
-        knee_r: rightLeg.knee,
-        ankle_r: rightLeg.ankle,
-        toe_r: rightLeg.toe
-      },
+      points,
       contacts: {
-        left: leftFoot.planted,
-        right: rightFoot.planted
+        left: Boolean(frame.contacts?.left),
+        right: Boolean(frame.contacts?.right)
       }
     };
+  }
+
+  function buildPose(modeKey, index) {
+    return buildPoseFromFrame(getFrame(modeKey, index));
+  }
+
+  function clearPropGroup() {
+    while (propGroup.children.length) {
+      propGroup.remove(propGroup.children[0]);
+    }
+    bottleBody = null;
+    bottleCap = null;
+  }
+
+  function addSceneBox(center, size, material) {
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(size[0], size[1], size[2]), material);
+    mesh.position.copy(vecFromArray(center));
+    propGroup.add(mesh);
+    return mesh;
+  }
+
+  function addSceneLeg(x, z, height, material) {
+    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, height, 10), material);
+    mesh.position.set(x, height / 2, z);
+    propGroup.add(mesh);
+    return mesh;
+  }
+
+  function buildSceneProps(motion) {
+    propMotionId = motion.id;
+    clearPropGroup();
+    propGroup.visible = Boolean(motion.props);
+    if (!motion.props) {
+      return;
+    }
+
+    const chair = motion.props.chair;
+    if (chair) {
+      addSceneBox(chair.seatCenter, chair.seatSize, propMaterials.chair);
+      addSceneBox(chair.backCenter, chair.backSize, propMaterials.chair);
+      [[-22, -30], [22, -30], [-22, 6], [22, 6]].forEach(([x, z]) => {
+        addSceneLeg(x, z, chair.legHeight, propMaterials.metal);
+      });
+    }
+
+    const table = motion.props.table;
+    if (table) {
+      addSceneBox(table.topCenter, table.topSize, propMaterials.table);
+      [[16, 8], [56, 8], [16, 40], [56, 40]].forEach(([x, z]) => {
+        addSceneLeg(x, z, table.legHeight, propMaterials.metal);
+      });
+    }
+
+    const radius = motion.props.bottle?.radius || 3.2;
+    bottleBody = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, 1, 18), propMaterials.bottle);
+    bottleCap = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.72, radius * 0.72, 1, 14), propMaterials.bottleCap);
+    propGroup.add(bottleBody, bottleCap);
   }
 
   function updateCylinder(mesh, from, to) {
@@ -381,8 +278,34 @@
     marker.position.set(ankle.x, 0.55, ankle.z);
   }
 
+  function updateSceneProps(motion, frame) {
+    if (propMotionId !== motion.id) {
+      buildSceneProps(motion);
+    }
+    propGroup.visible = Boolean(motion.props);
+    if (!motion.props || !bottleBody || !bottleCap) {
+      return;
+    }
+    const bottle = frame.props?.bottle;
+    const visible = Boolean(bottle?.bottom && bottle?.top);
+    bottleBody.visible = visible;
+    bottleCap.visible = visible;
+    if (!visible) {
+      return;
+    }
+    const bottom = vecFromArray(bottle.bottom);
+    const top = vecFromArray(bottle.top);
+    const capBase = bottom.clone().lerp(top, 0.86);
+    updateCylinder(bottleBody, bottom, capBase);
+    updateCylinder(bottleCap, capBase, top);
+  }
+
   function renderFrame() {
-    const pose = buildPose(currentMode, frameIndex);
+    const motion = getMotion(currentMode);
+    const frame = getFrame(currentMode, frameIndex);
+    const pose = buildPoseFromFrame(frame);
+    travelLine.visible = !motion.props;
+    updateSceneProps(motion, frame);
     jointNames.forEach((name) => {
       joints[name].position.copy(pose.points[name]);
     });
@@ -404,12 +327,12 @@
   }
 
   function refreshUi() {
-    const cfg = MOTIONS[currentMode];
-    motionName.textContent = cfg.name;
-    motionDescription.textContent = cfg.description;
-    timeline.max = String(cfg.frameCount - 1);
+    const motion = getMotion(currentMode);
+    motionName.textContent = motion.name;
+    motionDescription.textContent = motion.description;
+    timeline.max = String(motion.frameCount - 1);
     timeline.value = String(frameIndex);
-    frameReadout.textContent = `프레임 ${frameIndex + 1} / ${cfg.frameCount}`;
+    frameReadout.textContent = `프레임 ${frameIndex + 1} / ${motion.frameCount}`;
     playToggle.textContent = playing ? "일시정지" : "재생";
     speedReadout.textContent = `${speed.toFixed(2)}x`;
     setRangeProgress(timeline);
@@ -417,18 +340,22 @@
   }
 
   function setFrame(nextFrame) {
-    const cfg = MOTIONS[currentMode];
-    frameIndex = clamp(Math.round(Number(nextFrame) || 0), 0, cfg.frameCount - 1);
+    const motion = getMotion(currentMode);
+    frameIndex = clamp(Math.round(Number(nextFrame) || 0), 0, motion.frameCount - 1);
     frameCursor = frameIndex;
     renderFrame();
     refreshUi();
   }
 
   function setMode(modeKey) {
-    currentMode = MOTIONS[modeKey] ? modeKey : "walk";
+    const motion = KEYPOSE_MOTIONS[modeKey] || KEYPOSE_MOTIONS[motionOrder[0]];
+    currentMode = motion.id;
     modeSelect.value = currentMode;
     frameIndex = 0;
     frameCursor = 0;
+    target.y = motion.view?.targetY ?? defaultTargetY;
+    orbit.radius = motion.view?.radius ?? defaultRadius;
+    updateCamera();
     renderFrame();
     refreshUi();
   }
@@ -536,10 +463,11 @@
   });
 
   function animate(now) {
-    const cfg = MOTIONS[currentMode];
+    const motion = getMotion(currentMode);
     if (playing) {
       const deltaSeconds = Math.min(0.1, (now - lastTime) / 1000);
-      frameCursor = (frameCursor + deltaSeconds * cfg.fps * speed) % cfg.frameCount;
+      const nextCursor = frameCursor + deltaSeconds * motion.fps * speed;
+      frameCursor = nextCursor % motion.frameCount;
       const nextFrame = Math.floor(frameCursor);
       if (nextFrame !== frameIndex) {
         frameIndex = nextFrame;
@@ -555,6 +483,10 @@
   window.addEventListener("resize", resize);
   resize();
   updateCamera();
-  setMode(MOTIONS[initialMotion] ? initialMotion : "walk");
+  setMode(KEYPOSE_MOTIONS[initialMotion] ? initialMotion : motionOrder[0]);
+  if (initialFrame !== null) {
+    playing = false;
+    setFrame(initialFrame);
+  }
   requestAnimationFrame(animate);
 })();
