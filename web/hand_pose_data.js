@@ -353,7 +353,7 @@
       id: "palmDown",
       name: "Palm Down",
       sourceCell: 19,
-      palmRotation: [0, Math.PI, -70],
+      palmRotation: [0, 180, -70],
       fingers: {
         thumb: { curl: [2, 2, 0], spread: -8 },
         index: { curl: [0, 0, 0], spread: -3 },

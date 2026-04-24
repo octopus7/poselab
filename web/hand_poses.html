@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CodexPose Hand Pose Viewer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="hand-page">
+  <main class="hand-main">
+    <header class="site-header">
+      <div class="site-title">
+        <h1>CodexPose Hand Pose Viewer</h1>
+        <p>생성 이미지에서 추출한 20종 정적 손 포즈</p>
+      </div>
+      <a class="doc-link" href="index.html">Motion Viewer</a>
+    </header>
+
+    <section class="hand-viewer" aria-label="손 포즈 3D 뷰어">
+      <canvas id="handCanvas" aria-label="회전 가능한 손 포즈 3D 뷰어"></canvas>
+      <div class="fallback" id="fallback">
+        <div>
+          <h2>Three.js를 불러오지 못했습니다.</h2>
+          <p>인터넷 연결을 확인하거나 로컬 Three.js 빌드를 연결하세요.</p>
+        </div>
+      </div>
+
+      <div class="hand-toolbar">
+        <strong id="poseName">Relaxed Open</strong>
+        <span id="poseMeta">Cell 1 / 20</span>
+      </div>
+
+      <aside class="hand-pose-panel" aria-label="손 포즈 선택">
+        <div class="hand-pose-panel-title">Hand Poses</div>
+        <div id="poseList" class="hand-pose-list"></div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="hand_pose_data.js"></script>
+  <script src="hand_pose_viewer.js"></script>
+</body>
+</html>

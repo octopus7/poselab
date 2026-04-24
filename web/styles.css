@@ -90,6 +90,13 @@ select:hover,
   align-items: center;
 }
 
+.header-links {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
 .motion-scene {
   position: relative;
   height: min(660px, calc(100vh - 150px));
@@ -423,6 +430,137 @@ select:hover,
   text-align: center;
 }
 
+.hand-main {
+  width: min(1280px, calc(100vw - 32px));
+}
+
+.hand-viewer {
+  position: relative;
+  height: min(720px, calc(100vh - 116px));
+  min-height: 560px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+#handCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+#handCanvas.dragging {
+  cursor: grabbing;
+}
+
+.hand-toolbar {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  z-index: 4;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  max-width: calc(100% - 336px);
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 12px 30px rgba(18, 28, 43, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.hand-toolbar strong {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.hand-toolbar span {
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.hand-pose-panel {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  bottom: 16px;
+  z-index: 5;
+  width: 292px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 12px 30px rgba(18, 28, 43, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.hand-pose-panel-title {
+  flex: 0 0 auto;
+  padding: 13px 14px 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hand-pose-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.hand-pose-item {
+  width: 100%;
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  padding: 7px 8px;
+  text-align: left;
+}
+
+.hand-pose-item span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #edf2f7;
+  color: var(--muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.hand-pose-item strong {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hand-pose-item.active {
+  border-color: rgba(34, 111, 199, 0.72);
+  background: #eef6ff;
+}
+
+.hand-pose-item.active span {
+  background: var(--accent);
+  color: #ffffff;
+}
+
 @media (max-width: 760px) {
   main {
     width: min(360px, calc(100vw - 24px));
@@ -439,9 +577,39 @@ select:hover,
     justify-content: center;
   }
 
+  .header-links {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .motion-scene {
     height: 650px;
     min-height: 650px;
+  }
+
+  .hand-main {
+    width: min(420px, calc(100vw - 24px));
+  }
+
+  .hand-viewer {
+    height: 760px;
+    min-height: 760px;
+  }
+
+  .hand-toolbar {
+    right: 16px;
+    max-width: none;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .hand-pose-panel {
+    left: 16px;
+    right: 16px;
+    top: auto;
+    bottom: 16px;
+    width: auto;
+    height: 268px;
   }
 
   .motion-title {
