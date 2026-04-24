@@ -58,22 +58,23 @@
   ];
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf8fafc);
+  scene.background = new THREE.Color(0xeef3f7);
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.5));
   renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMappingExposure = 0.86;
 
   const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 600);
   const target = new THREE.Vector3(0, 8, 0);
   const orbit = { theta: -0.72, phi: 1.12, radius: 86 };
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8e1ea, 1.25));
-  const key = new THREE.DirectionalLight(0xffffff, 1.55);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8e1ea, 0.92));
+  const key = new THREE.DirectionalLight(0xffffff, 1.05);
   key.position.set(60, 110, 90);
   scene.add(key);
 
-  const grid = new THREE.GridHelper(90, 9, 0xcdd6df, 0xe4ebf2);
+  const grid = new THREE.GridHelper(90, 9, 0xaebdc9, 0xd6e0e8);
   grid.position.y = -20;
   scene.add(grid);
 
@@ -81,13 +82,13 @@
   scene.add(handGroup);
 
   const materials = {
-    palm: new THREE.MeshStandardMaterial({ color: 0xd7dbd9, roughness: 0.64 }),
-    finger: new THREE.MeshStandardMaterial({ color: 0xd7dbd9, roughness: 0.64 }),
-    thumb: new THREE.MeshStandardMaterial({ color: 0xd7dbd9, roughness: 0.64 }),
-    joint: new THREE.MeshStandardMaterial({ color: 0xcbd2d0, roughness: 0.62 }),
-    prop: new THREE.MeshStandardMaterial({ color: 0x8a7968, roughness: 0.74 }),
-    edge: new THREE.MeshStandardMaterial({ color: 0x8ca0b3, roughness: 0.7 }),
-    cylinder: new THREE.MeshStandardMaterial({ color: 0xb98958, roughness: 0.62 })
+    palm: new THREE.MeshStandardMaterial({ color: 0x9aa5ad, roughness: 0.68 }),
+    finger: new THREE.MeshStandardMaterial({ color: 0x9aa5ad, roughness: 0.68 }),
+    thumb: new THREE.MeshStandardMaterial({ color: 0x9aa5ad, roughness: 0.68 }),
+    joint: new THREE.MeshStandardMaterial({ color: 0x6f7e89, roughness: 0.64 }),
+    prop: new THREE.MeshStandardMaterial({ color: 0x6e5d4e, roughness: 0.76 }),
+    edge: new THREE.MeshStandardMaterial({ color: 0x718594, roughness: 0.72 }),
+    cylinder: new THREE.MeshStandardMaterial({ color: 0x9d6f43, roughness: 0.66 })
   };
 
   const joints = {};
@@ -107,7 +108,7 @@
 
   const palmSurface = new THREE.Mesh(
     new THREE.SphereGeometry(1, 24, 16),
-    new THREE.MeshStandardMaterial({ color: 0xdde0de, roughness: 0.68, transparent: true, opacity: 0.92 })
+    new THREE.MeshStandardMaterial({ color: 0xa8b0b6, roughness: 0.7, transparent: true, opacity: 0.96 })
   );
   palmSurface.scale.set(13.8, 13.0, 4.8);
   handGroup.add(palmSurface);
