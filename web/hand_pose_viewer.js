@@ -35,7 +35,7 @@
     ["wrist", "palm", "palm", 1.7],
     ["palm", "palm_l", "palm", 1.4],
     ["palm", "palm_r", "palm", 1.4],
-    ["palm_l", "thumb_cmc", "thumb", 1.25],
+    ["palm_r", "thumb_cmc", "thumb", 1.25],
     ["thumb_cmc", "thumb_mcp", "thumb", 1.25],
     ["thumb_mcp", "thumb_ip", "thumb", 1.15],
     ["thumb_ip", "thumb_tip", "thumb", 1.0],
@@ -106,13 +106,14 @@
   });
 
   const palmSurface = new THREE.Mesh(
-    new THREE.BoxGeometry(22, 19, 4.2),
-    new THREE.MeshStandardMaterial({ color: 0xd6d9d8, roughness: 0.68, transparent: true, opacity: 0.78 })
+    new THREE.SphereGeometry(1, 24, 16),
+    new THREE.MeshStandardMaterial({ color: 0xd6d9d8, roughness: 0.68, transparent: true, opacity: 0.64 })
   );
+  palmSurface.scale.set(12.6, 11.2, 3.2);
   handGroup.add(palmSurface);
 
   const propGroup = new THREE.Group();
-  scene.add(propGroup);
+  handGroup.add(propGroup);
   const stoneMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 1), materials.prop);
   const edgeMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), materials.edge);
   const cylinderMesh = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 22), materials.cylinder);
@@ -138,10 +139,6 @@
 
   function vecFromArray(value) {
     return new THREE.Vector3(value[0], value[1], value[2]);
-  }
-
-  function arrayFromVec(value) {
-    return [value.x, value.y, value.z];
   }
 
   function clonePose(pose) {
@@ -174,16 +171,10 @@
     };
   }
 
-  function transformPoint(point, rotation) {
-    const vector = vecFromArray(point);
-    vector.applyEuler(new THREE.Euler(rotation[0] * DEG, rotation[1] * DEG, rotation[2] * DEG, "XYZ"));
-    return vector;
-  }
-
   function currentPoints(pose) {
     const points = {};
     pointNames.forEach((name) => {
-      points[name] = transformPoint(pose.points[name], pose.palmRotation);
+      points[name] = vecFromArray(pose.points[name]);
     });
     return points;
   }
@@ -207,21 +198,21 @@
       const radius = pose.prop.radius || 5;
       stoneMesh.visible = true;
       stoneMesh.scale.set(radius * 1.08, radius * 0.82, radius * 0.94);
-      stoneMesh.position.copy(transformPoint(pose.prop.position, pose.palmRotation));
+      stoneMesh.position.copy(vecFromArray(pose.prop.position));
       return;
     }
     if (pose.prop.type === "edge") {
       edgeMesh.visible = true;
       edgeMesh.scale.set(pose.prop.size[0], pose.prop.size[1], pose.prop.size[2]);
-      edgeMesh.position.copy(transformPoint(pose.prop.position, pose.palmRotation));
-      edgeMesh.rotation.set(pose.palmRotation[0] * DEG, pose.palmRotation[1] * DEG, pose.palmRotation[2] * DEG);
+      edgeMesh.position.copy(vecFromArray(pose.prop.position));
+      edgeMesh.rotation.set(0, 0, 0);
       return;
     }
     if (pose.prop.type === "cylinder") {
       cylinderMesh.visible = true;
       cylinderMesh.scale.set(pose.prop.radius, pose.prop.height, pose.prop.radius);
-      cylinderMesh.position.copy(transformPoint(pose.prop.position, pose.palmRotation));
-      cylinderMesh.rotation.set(pose.palmRotation[0] * DEG, pose.palmRotation[1] * DEG, pose.palmRotation[2] * DEG + Math.PI / 2);
+      cylinderMesh.position.copy(vecFromArray(pose.prop.position));
+      cylinderMesh.rotation.set(0, 0, Math.PI / 2);
     }
   }
 
@@ -234,7 +225,8 @@
       updateCylinder(mesh, points[from], points[to]);
     });
     palmSurface.position.copy(points.palm);
-    palmSurface.rotation.set(pose.palmRotation[0] * DEG, pose.palmRotation[1] * DEG, pose.palmRotation[2] * DEG);
+    palmSurface.rotation.set(0, 0, 0);
+    handGroup.rotation.set(pose.palmRotation[0] * DEG, pose.palmRotation[1] * DEG, pose.palmRotation[2] * DEG);
     updateProps(pose);
   }
 
