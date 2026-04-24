@@ -1,4 +1,9 @@
 # codexpose
+
+## 배포
+
+- Cloudflare Pages: https://poselab.pages.dev
+
 코덱스 포즈/모션 생성 웹 뷰어
 
 ## 정적 뷰어
