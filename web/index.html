@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CodexPose Walk / Run Motion</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <header class="site-header">
+      <div class="site-title">
+        <h1>CodexPose Walk / Run Motion</h1>
+        <p>UE5 Manny 비율을 기준으로 한 걷기와 뛰기 루프 미리보기</p>
+      </div>
+      <a class="doc-link" href="../docs/walk-run-motion-intent.md">Motion MD</a>
+    </header>
+
+    <section class="motion-scene" aria-label="걷기와 뛰기 모션 3D 미리보기">
+      <canvas id="motionCanvas" aria-label="회전 가능한 Manny 걷기 뛰기 3D 모션"></canvas>
+      <div class="fallback" id="fallback">
+        <div>
+          <h2>Three.js를 불러오지 못했습니다.</h2>
+          <p>인터넷 연결을 확인하거나 로컬 Three.js 빌드를 연결하세요.</p>
+        </div>
+      </div>
+
+      <div class="motion-toolbar">
+        <div class="motion-title">
+          <strong id="motionName">Walk Cycle</strong>
+          <span id="motionDescription">48프레임 걷기 루프</span>
+        </div>
+        <div class="motion-controls">
+          <select id="motionMode" aria-label="모션 선택">
+            <option value="walk">걷기</option>
+            <option value="run">뛰기</option>
+          </select>
+          <button id="playToggle" type="button">일시정지</button>
+          <button id="resetMotion" type="button">정지</button>
+        </div>
+      </div>
+
+      <div class="view-gizmo" aria-label="시점 선택">
+        <span class="gizmo-line x" aria-hidden="true"></span>
+        <span class="gizmo-line y" aria-hidden="true"></span>
+        <span class="gizmo-line z" aria-hidden="true"></span>
+        <span class="gizmo-core" aria-hidden="true"></span>
+        <button class="gizmo-axis z" type="button" data-view="top" title="Top">Z</button>
+        <button class="gizmo-axis y" type="button" data-view="front" title="Front">Y</button>
+        <button class="gizmo-axis x" type="button" data-view="right" title="Right">X</button>
+      </div>
+
+      <div class="motion-legend">
+        <span><i class="swatch right"></i>오른쪽</span>
+        <span><i class="swatch left"></i>왼쪽</span>
+        <span><i class="swatch center"></i>중앙</span>
+        <span><i class="swatch contact"></i>접지</span>
+      </div>
+
+      <div class="player-controls" aria-label="재생 컨트롤">
+        <input id="timeline" class="timeline-input" type="range" min="0" max="47" value="0" step="1" aria-label="타임라인">
+        <span id="frameReadout" class="metric">프레임 1 / 48</span>
+        <label class="speed-control">
+          <span>속도</span>
+          <input id="speed" type="range" min="0.25" max="1.75" value="1" step="0.25">
+          <span id="speedReadout">1.00x</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="motion-summary" aria-label="모션 요약">
+      <article class="summary-item">
+        <strong>걷기</strong>
+        <span>양발 접지가 겹치는 안정적인 48프레임 루프입니다. 골반 좌우 이동, 낮은 상하 바운스, 자연스러운 반대 팔 스윙을 우선합니다.</span>
+      </article>
+      <article class="summary-item">
+        <strong>뛰기</strong>
+        <span>32프레임 루프로 착지, 압축, 밀어내기, 체공을 분명히 나눕니다. 상체 전경사와 강한 팔 펌프를 사용합니다.</span>
+      </article>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="motion_viewer.js"></script>
+</body>
+</html>
