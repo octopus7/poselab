@@ -108,7 +108,7 @@
 
   const palmSurface = new THREE.Mesh(
     new THREE.SphereGeometry(1, 24, 16),
-    new THREE.MeshStandardMaterial({ color: 0xa8b0b6, roughness: 0.7, transparent: true, opacity: 0.96 })
+    new THREE.MeshStandardMaterial({ color: 0xa8b0b6, roughness: 0.7, transparent: true, opacity: 0.68, depthWrite: false })
   );
   palmSurface.scale.set(13.8, 13.0, 4.8);
   handGroup.add(palmSurface);

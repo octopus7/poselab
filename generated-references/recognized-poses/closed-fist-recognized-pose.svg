@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="700" viewBox="0 0 900 700">
+  <rect width="100%" height="100%" fill="#eef3f7"/>
+  <text x="32" y="42" font-size="24" font-family="Segoe UI, Arial" font-weight="700" fill="#172033">Recognized Pose: Closed Fist</text>
+  <text x="32" y="70" font-size="15" font-family="Segoe UI, Arial" fill="#5f6b7b">Projection from web/hand_pose_data.js. Cyan=fingers, orange=thumb, gray=palm/wrist.</text>
+  <g font-family="Segoe UI, Arial">
+    <ellipse cx="452.0" cy="571.0" rx="110" ry="120" fill="#d8dee2" opacity="0.62"/>
+    <line x1="450.0" y1="687.6" x2="452.0" y2="571.0" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="452.0" y1="571.0" x2="361.5" y2="582.8" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="452.0" y1="571.0" x2="536.2" y2="580.8" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="536.2" y1="580.8" x2="557.4" y2="578.4" stroke="#d98b2a" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="557.4" y1="578.4" x2="625.5" y2="555.3" stroke="#d98b2a" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="625.5" y1="555.3" x2="664.2" y2="533.4" stroke="#d98b2a" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="664.2" y1="533.4" x2="690.9" y2="511.9" stroke="#d98b2a" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="452.0" y1="571.0" x2="511.4" y2="516.0" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="511.4" y1="516.0" x2="548.8" y2="467.7" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="548.8" y1="467.7" x2="570.8" y2="515.0" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="570.8" y1="515.0" x2="597.9" y2="543.0" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="452.0" y1="571.0" x2="467.6" y2="508.4" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="467.6" y1="508.4" x2="503.6" y2="458.8" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="503.6" y1="458.8" x2="524.2" y2="511.0" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="524.2" y1="511.0" x2="550.9" y2="541.4" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="452.0" y1="571.0" x2="422.8" y2="513.2" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="422.8" y1="513.2" x2="461.4" y2="466.1" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="461.4" y1="466.1" x2="484.7" y2="513.7" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="484.7" y1="513.7" x2="513.8" y2="539.9" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="452.0" y1="571.0" x2="383.1" y2="525.8" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="383.1" y1="525.8" x2="419.5" y2="480.0" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="419.5" y1="480.0" x2="443.6" y2="517.5" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+<line x1="443.6" y1="517.5" x2="473.5" y2="538.0" stroke="#2d9ec8" stroke-width="16" stroke-linecap="round" opacity="0.82"/>
+    <circle cx="450.0" cy="687.6" r="7" fill="#6f7e89" stroke="#344150" stroke-width="1.5"/>
+<circle cx="452.0" cy="571.0" r="7" fill="#6f7e89" stroke="#344150" stroke-width="1.5"/>
+<circle cx="361.5" cy="582.8" r="7" fill="#6f7e89" stroke="#344150" stroke-width="1.5"/>
+<circle cx="536.2" cy="580.8" r="7" fill="#6f7e89" stroke="#344150" stroke-width="1.5"/>
+<circle cx="557.4" cy="578.4" r="7" fill="#f4a12d" stroke="#344150" stroke-width="1.5"/>
+<circle cx="625.5" cy="555.3" r="7" fill="#f4a12d" stroke="#344150" stroke-width="1.5"/>
+<circle cx="664.2" cy="533.4" r="7" fill="#f4a12d" stroke="#344150" stroke-width="1.5"/>
+<circle cx="690.9" cy="511.9" r="9" fill="#f4a12d" stroke="#344150" stroke-width="1.5"/>
+<circle cx="511.4" cy="516.0" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="548.8" cy="467.7" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="570.8" cy="515.0" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="597.9" cy="543.0" r="9" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="467.6" cy="508.4" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="503.6" cy="458.8" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="524.2" cy="511.0" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="550.9" cy="541.4" r="9" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="422.8" cy="513.2" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="461.4" cy="466.1" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="484.7" cy="513.7" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="513.8" cy="539.9" r="9" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="383.1" cy="525.8" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="419.5" cy="480.0" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="443.6" cy="517.5" r="7" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+<circle cx="473.5" cy="538.0" r="9" fill="#91a1ad" stroke="#344150" stroke-width="1.5"/>
+    <text x="460.0" y="679.6" font-size="13" fill="#172033">wrist</text>
+<text x="462.0" y="563.0" font-size="13" fill="#172033">palm</text>
+
+
+
+
+
+<text x="700.9" y="503.9" font-size="13" fill="#172033">thumb_tip</text>
+
+
+
+<text x="607.9" y="535.0" font-size="13" fill="#172033">index_tip</text>
+
+
+
+<text x="560.9" y="533.4" font-size="13" fill="#172033">middle_tip</text>
+
+
+
+<text x="523.8" y="531.9" font-size="13" fill="#172033">ring_tip</text>
+
+
+
+<text x="483.5" y="530.0" font-size="13" fill="#172033">pinky_tip</text>
+  </g>
+</svg>

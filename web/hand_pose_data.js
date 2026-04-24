@@ -125,6 +125,10 @@
       points[b] = clonePoint(blended);
     });
 
+    Object.entries(definition.pointOverrides || {}).forEach(([name, point]) => {
+      points[name] = point;
+    });
+
     return {
       id: definition.id,
       name: definition.name,
@@ -173,6 +177,28 @@
         middle: { curl: [78, 96, 66], depth: 2.7 },
         ring: { curl: [78, 94, 66], spread: 3, depth: 2.8 },
         pinky: { curl: [74, 88, 60], spread: 7, depth: 2.8 }
+      },
+      pointOverrides: {
+        thumb_cmc: vec(12.8, -4.0, 1.8),
+        thumb_mcp: vec(9.4, -4.6, 5.4),
+        thumb_ip: vec(4.4, -3.2, 7.2),
+        thumb_tip: vec(-1.8, -2.2, 7.0),
+        index_mcp: vec(7.6, 4.2, 0.8),
+        index_pip: vec(7.0, 6.4, 3.8),
+        index_dip: vec(5.0, 4.2, 6.2),
+        index_tip: vec(2.6, 1.6, 6.0),
+        middle_mcp: vec(2.2, 5.2, 0.8),
+        middle_pip: vec(2.0, 6.8, 4.2),
+        middle_dip: vec(0.6, 4.3, 6.8),
+        middle_tip: vec(-0.8, 1.5, 6.6),
+        ring_mcp: vec(-3.4, 4.6, 0.8),
+        ring_pip: vec(-3.2, 6.2, 3.8),
+        ring_dip: vec(-4.4, 3.9, 6.2),
+        ring_tip: vec(-4.8, 1.1, 5.9),
+        pinky_mcp: vec(-8.4, 3.0, 0.8),
+        pinky_pip: vec(-8.0, 5.0, 3.2),
+        pinky_dip: vec(-7.8, 2.9, 5.4),
+        pinky_tip: vec(-6.8, 0.8, 5.2)
       }
     },
     {
