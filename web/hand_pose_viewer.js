@@ -32,29 +32,29 @@
     "pinky_mcp", "pinky_pip", "pinky_dip", "pinky_tip"
   ];
   const connections = [
-    ["wrist", "palm", "palm", 1.7],
-    ["palm", "palm_l", "palm", 1.4],
-    ["palm", "palm_r", "palm", 1.4],
-    ["palm_r", "thumb_cmc", "thumb", 1.25],
-    ["thumb_cmc", "thumb_mcp", "thumb", 1.25],
-    ["thumb_mcp", "thumb_ip", "thumb", 1.15],
-    ["thumb_ip", "thumb_tip", "thumb", 1.0],
-    ["palm", "index_mcp", "finger", 1.2],
-    ["index_mcp", "index_pip", "finger", 1.15],
-    ["index_pip", "index_dip", "finger", 1.05],
-    ["index_dip", "index_tip", "finger", 0.95],
-    ["palm", "middle_mcp", "finger", 1.2],
-    ["middle_mcp", "middle_pip", "finger", 1.15],
-    ["middle_pip", "middle_dip", "finger", 1.05],
-    ["middle_dip", "middle_tip", "finger", 0.95],
-    ["palm", "ring_mcp", "finger", 1.2],
-    ["ring_mcp", "ring_pip", "finger", 1.15],
-    ["ring_pip", "ring_dip", "finger", 1.05],
-    ["ring_dip", "ring_tip", "finger", 0.95],
-    ["palm", "pinky_mcp", "finger", 1.15],
-    ["pinky_mcp", "pinky_pip", "finger", 1.05],
-    ["pinky_pip", "pinky_dip", "finger", 0.98],
-    ["pinky_dip", "pinky_tip", "finger", 0.9]
+    ["wrist", "palm", "palm", 4.2],
+    ["palm", "palm_l", "palm", 4.8],
+    ["palm", "palm_r", "palm", 4.8],
+    ["palm_r", "thumb_cmc", "thumb", 3.25],
+    ["thumb_cmc", "thumb_mcp", "thumb", 3.15],
+    ["thumb_mcp", "thumb_ip", "thumb", 2.75],
+    ["thumb_ip", "thumb_tip", "thumb", 2.35],
+    ["palm", "index_mcp", "finger", 2.9],
+    ["index_mcp", "index_pip", "finger", 2.65],
+    ["index_pip", "index_dip", "finger", 2.25],
+    ["index_dip", "index_tip", "finger", 1.95],
+    ["palm", "middle_mcp", "finger", 3.0],
+    ["middle_mcp", "middle_pip", "finger", 2.78],
+    ["middle_pip", "middle_dip", "finger", 2.35],
+    ["middle_dip", "middle_tip", "finger", 2.0],
+    ["palm", "ring_mcp", "finger", 2.85],
+    ["ring_mcp", "ring_pip", "finger", 2.58],
+    ["ring_pip", "ring_dip", "finger", 2.18],
+    ["ring_dip", "ring_tip", "finger", 1.9],
+    ["palm", "pinky_mcp", "finger", 2.55],
+    ["pinky_mcp", "pinky_pip", "finger", 2.28],
+    ["pinky_pip", "pinky_dip", "finger", 1.95],
+    ["pinky_dip", "pinky_tip", "finger", 1.7]
   ];
 
   const scene = new THREE.Scene();
@@ -81,17 +81,17 @@
   scene.add(handGroup);
 
   const materials = {
-    palm: new THREE.MeshStandardMaterial({ color: 0x586474, roughness: 0.58 }),
-    finger: new THREE.MeshStandardMaterial({ color: 0x23aeea, roughness: 0.62 }),
-    thumb: new THREE.MeshStandardMaterial({ color: 0xf4a12d, roughness: 0.62 }),
-    joint: new THREE.MeshStandardMaterial({ color: 0x2f3a49, roughness: 0.58 }),
+    palm: new THREE.MeshStandardMaterial({ color: 0xd7dbd9, roughness: 0.64 }),
+    finger: new THREE.MeshStandardMaterial({ color: 0xd7dbd9, roughness: 0.64 }),
+    thumb: new THREE.MeshStandardMaterial({ color: 0xd7dbd9, roughness: 0.64 }),
+    joint: new THREE.MeshStandardMaterial({ color: 0xcbd2d0, roughness: 0.62 }),
     prop: new THREE.MeshStandardMaterial({ color: 0x8a7968, roughness: 0.74 }),
     edge: new THREE.MeshStandardMaterial({ color: 0x8ca0b3, roughness: 0.7 }),
     cylinder: new THREE.MeshStandardMaterial({ color: 0xb98958, roughness: 0.62 })
   };
 
   const joints = {};
-  const jointGeometry = new THREE.SphereGeometry(1.15, 16, 12);
+  const jointGeometry = new THREE.SphereGeometry(2.15, 18, 14);
   pointNames.forEach((name) => {
     const material = name.startsWith("thumb") ? materials.thumb : name.startsWith("palm") || name === "wrist" ? materials.palm : materials.joint;
     const mesh = new THREE.Mesh(jointGeometry, material);
@@ -107,9 +107,9 @@
 
   const palmSurface = new THREE.Mesh(
     new THREE.SphereGeometry(1, 24, 16),
-    new THREE.MeshStandardMaterial({ color: 0xd6d9d8, roughness: 0.68, transparent: true, opacity: 0.64 })
+    new THREE.MeshStandardMaterial({ color: 0xdde0de, roughness: 0.68, transparent: true, opacity: 0.92 })
   );
-  palmSurface.scale.set(12.6, 11.2, 3.2);
+  palmSurface.scale.set(13.8, 13.0, 4.8);
   handGroup.add(palmSurface);
 
   const propGroup = new THREE.Group();

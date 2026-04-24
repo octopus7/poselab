@@ -40,10 +40,27 @@
     const spread = (spec.spread || 0) + def.spread;
     const zLift = spec.z || 0;
     const depth = spec.depth || 0;
-    let angle = (def.baseAngle + spread - curl[0]) * DEG;
     let current = vec(def.base[0] + (spec.offsetX || 0), def.base[1] + (spec.offsetY || 0), def.base[2] + zLift);
     const points = [current];
 
+    if (name !== "thumb") {
+      const side = def.base[0] >= 0 ? 1 : -1;
+      let curlTotal = 0;
+      def.lengths.forEach((length, index) => {
+        curlTotal = Math.min(162, curlTotal + curl[index]);
+        const curlAngle = curlTotal * DEG;
+        const spreadAngle = spread * DEG;
+        current = vec(
+          current[0] + side * Math.sin(spreadAngle) * length * 0.55,
+          current[1] + Math.cos(curlAngle) * length,
+          current[2] + Math.sin(curlAngle) * length * 0.72 + depth * (index + 1)
+        );
+        points.push(current);
+      });
+      return points;
+    }
+
+    let angle = (def.baseAngle + spread - curl[0]) * DEG;
     def.lengths.forEach((length, index) => {
       if (index > 0) {
         angle -= curl[index] * DEG;
