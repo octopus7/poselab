@@ -27,6 +27,7 @@
       description: "48프레임, 24fps 안정 보행 루프",
       frameCount: 48,
       fps: 24,
+      fast: false,
       stanceRatio: 0.62,
       baseY: 94,
       bob: 1.75,
@@ -47,6 +48,7 @@
       description: "32프레임, 32fps 체공 포함 뛰기 루프",
       frameCount: 32,
       fps: 32,
+      fast: true,
       stanceRatio: 0.38,
       baseY: 95.5,
       bob: 5.4,
@@ -61,6 +63,27 @@
       kneeForward: 8,
       kneeSwing: 18,
       kneeLift: 8
+    },
+    sprint: {
+      name: "Sprint Cycle",
+      description: "32프레임, 36fps 전력질주 루프",
+      frameCount: 32,
+      fps: 36,
+      fast: true,
+      stanceRatio: 0.3,
+      baseY: 96.5,
+      bob: 6.8,
+      lateralSway: 0.9,
+      stepFront: 42,
+      stepBack: -36,
+      footLift: 29,
+      footSpacing: 9.2,
+      forwardLean: 19,
+      chestCounter: 9.2,
+      armReach: 38,
+      kneeForward: 10,
+      kneeSwing: 23,
+      kneeLift: 11
     }
   };
 
@@ -186,6 +209,7 @@
   let playing = true;
   let speed = 1;
   let lastTime = performance.now();
+  const initialMotion = new URLSearchParams(window.location.search).get("motion");
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -229,7 +253,7 @@
     const ankleY = planted ? 8.0 + Math.sin(t * Math.PI) * 0.45 : 8.0 + lift * cfg.footLift;
     const toeY = planted ? 1.2 : 1.5 + lift * Math.max(3, cfg.footLift * 0.28);
     const toeReach = planted ? lerp(15.8, 13.8, t) : 15.2 + lift * 2.2;
-    const sideSweep = planted ? 0 : side * lift * (currentMode === "run" ? 2.1 : 1.1);
+    const sideSweep = planted ? 0 : side * lift * (cfg.fast ? 2.4 : 1.1);
 
     return {
       ankle: vec(sideX + sideSweep, ankleY, z),
@@ -244,18 +268,18 @@
     const ankle = foot.ankle;
     const toe = foot.toe;
     const mid = hip.clone().lerp(ankle, 0.53);
-    const kneeDirection = ankle.z >= hip.z ? 1 : -1;
     const knee = mid.clone();
+    const kneeForward = cfg.kneeForward + foot.lift * cfg.kneeSwing;
     knee.x += side * (1.4 + foot.lift * 2.4);
     knee.y += foot.lift * cfg.kneeLift - (foot.planted ? 1.4 : 0);
-    knee.z += kneeDirection * (cfg.kneeForward + foot.lift * cfg.kneeSwing);
+    knee.z += kneeForward;
     return { hip, knee, ankle, toe };
   }
 
   function buildArm(side, shoulder, drive, cfg) {
     const forward = drive;
     const pump = Math.abs(forward);
-    const isRun = currentMode === "run";
+    const isRun = cfg.fast;
     const elbowDrop = isRun ? 14.5 : 21.0;
     const handDrop = isRun ? 12.8 : 17.5;
     const elbowReach = cfg.armReach * (isRun ? 0.46 : 0.52);
@@ -279,12 +303,12 @@
     const wave = Math.sin(phase * TAU);
     const doubleWave = Math.sin(phase * TAU * 2);
     const contactCompression = Math.max(0, Math.cos(phase * TAU * 2));
-    const runFlight = modeKey === "run" ? Math.max(0, Math.sin(phase * TAU * 2 - 0.18)) : 0;
+    const runFlight = cfg.fast ? Math.max(0, Math.sin(phase * TAU * 2 - 0.18)) : 0;
     const rootX = wave * cfg.lateralSway;
     const rootY = cfg.baseY
       + (1 - Math.cos(phase * TAU * 2)) * 0.5 * cfg.bob
       + runFlight * 1.7
-      - contactCompression * (modeKey === "run" ? 2.0 : 0.45);
+      - contactCompression * (cfg.fast ? 2.0 : 0.45);
     const twist = Math.sin(phase * TAU + Math.PI * 0.12);
     const pelvis = vec(rootX, rootY, 0);
     const spine = pelvis.clone().add(vec(0, 19, cfg.forwardLean * 0.36));
@@ -531,6 +555,6 @@
   window.addEventListener("resize", resize);
   resize();
   updateCamera();
-  setMode("walk");
+  setMode(MOTIONS[initialMotion] ? initialMotion : "walk");
   requestAnimationFrame(animate);
 })();

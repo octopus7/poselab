@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CodexPose Walk / Run Motion</title>
+  <title>CodexPose Walk / Run / Sprint Motion</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main>
     <header class="site-header">
       <div class="site-title">
-        <h1>CodexPose Walk / Run Motion</h1>
-        <p>UE5 Manny 비율을 기준으로 한 걷기와 뛰기 루프 미리보기</p>
+        <h1>CodexPose Walk / Run / Sprint Motion</h1>
+        <p>UE5 Manny 비율을 기준으로 한 걷기, 뛰기, 전력질주 루프 미리보기</p>
       </div>
       <a class="doc-link" href="../docs/walk-run-motion-intent.md">Motion MD</a>
     </header>
 
-    <section class="motion-scene" aria-label="걷기와 뛰기 모션 3D 미리보기">
-      <canvas id="motionCanvas" aria-label="회전 가능한 Manny 걷기 뛰기 3D 모션"></canvas>
+    <section class="motion-scene" aria-label="걷기 뛰기 전력질주 모션 3D 미리보기">
+      <canvas id="motionCanvas" aria-label="회전 가능한 Manny 걷기 뛰기 전력질주 3D 모션"></canvas>
       <div class="fallback" id="fallback">
         <div>
           <h2>Three.js를 불러오지 못했습니다.</h2>
@@ -34,6 +34,7 @@
           <select id="motionMode" aria-label="모션 선택">
             <option value="walk">걷기</option>
             <option value="run">뛰기</option>
+            <option value="sprint">전력질주</option>
           </select>
           <button id="playToggle" type="button">일시정지</button>
           <button id="resetMotion" type="button">정지</button>
@@ -76,6 +77,10 @@
       <article class="summary-item">
         <strong>뛰기</strong>
         <span>32프레임 루프로 착지, 압축, 밀어내기, 체공을 분명히 나눕니다. 상체 전경사와 강한 팔 펌프를 사용합니다.</span>
+      </article>
+      <article class="summary-item">
+        <strong>전력질주</strong>
+        <span>접지 시간을 더 짧게 두고 보폭, 무릎 회수, 상체 전경사를 키운 빠른 뛰기 모션입니다.</span>
       </article>
     </section>
   </main>
